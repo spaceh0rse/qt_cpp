@@ -25,14 +25,14 @@ Qt CPP Projekt BA Leipzig 2016 Alexander Heiman, Julius Krenkel
 
     -results are displayed using tablewidget
 
-updates:
+Updates:
 
     -implemented printing function
     
     -GUI fixes
 
 
-known bugs and issues:
+Bbugs and Issues:
 
     -unix version 
 
