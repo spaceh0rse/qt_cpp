@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "scanthread.h"
-#include <QLinkedList>
+#include "ui_settings.h"
+#include "ui_about.h"
 
 namespace Ui {
 class MainWindow;
@@ -15,20 +15,28 @@ class MainWindow : public QMainWindow
     
 public:
     explicit MainWindow(QWidget *parent = 0);
+    void fillTable(QStringList addresses);
     ~MainWindow();
 
 private:
     Ui::MainWindow *ui;
-    QLinkedList<QString> listEintraege;
+    QDialog *formSettings;
+    QDialog *formAbout;
+    Ui::Settings Form_settings;
+    Ui::About Form_about;
+    QStringList listEntry;
 
 private slots:
     void run();
     void onResultReady(int res);
     void onEntryTable(QString entry);
-    void abort();
+    void ipFeedback(QString address);
+    void print();
+    void on_actionSettings_triggered();
+    void on_actionAbout_triggered();
 
 signals:
-    void abortThread(bool stop);
+
 };
 
 #endif // MAINWINDOW_H
