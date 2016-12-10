@@ -19,14 +19,16 @@ public:
 
     QStringList ipArray;
 
-    static int counterSplit_cut;
+    static string delay;
+    static int counterSplit_cut,responseDelay;
     static QString user_in, ownIP;
     static QStringList array;
 
 signals:
-    void resultReady(int);
+    void resultReady();
     void entryTable(QString);
     void ipNow(QString);
+    void done();
 };
 
 #endif // ADDRESSRANGE_H

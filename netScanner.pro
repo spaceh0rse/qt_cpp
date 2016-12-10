@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     network_manager.cpp \
     addressrange.cpp \
     settings.cpp \
-    about.cpp
+    about.cpp \
+    done.cpp
 
 HEADERS  += mainwindow.h \
     interface.h \
@@ -32,8 +33,13 @@ HEADERS  += mainwindow.h \
     network_manager.h \
     addressrange.h \
     settings.h \
-    about.h
+    about.h \
+    done.h
 
 FORMS    += mainwindow.ui \
     settings.ui \
-    about.ui
+    about.ui \
+    done.ui
+
+DISTFILES += \
+    settings.ini
