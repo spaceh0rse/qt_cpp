@@ -5,6 +5,8 @@
 #include "ui_settings.h"
 #include "ui_about.h"
 
+#include "addressrange.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -18,25 +20,26 @@ public:
     void fillTable(QStringList addresses);
     ~MainWindow();
 
+    addressRange * worker = new addressRange;
+
 private:
     Ui::MainWindow *ui;
     QDialog *formSettings;
     QDialog *formAbout;
-    Ui::Settings Form_settings;
-    Ui::About Form_about;
     QStringList listEntry;
+
+    static int settingDelay;
 
 private slots:
     void run();
-    void onResultReady(int res);
+    void onResultReady();
     void onEntryTable(QString entry);
     void ipFeedback(QString address);
     void print();
     void on_actionSettings_triggered();
     void on_actionAbout_triggered();
-
-signals:
-
+    void on_actionExit_triggered();
+    void on_btnAbort_clicked();
 };
 
 #endif // MAINWINDOW_H

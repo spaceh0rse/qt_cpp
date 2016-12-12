@@ -3,14 +3,14 @@
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="windowModality">
-   <enum>Qt::NonModal</enum>
+   <enum>Qt::ApplicationModal</enum>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>402</width>
-    <height>515</height>
+    <width>420</width>
+    <height>586</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icon/server_b.png</normaloff>icon/server_b.png</iconset>
+    <normaloff>pic/server.png</normaloff>pic/server.png</iconset>
   </property>
   <property name="documentMode">
    <bool>false</bool>
@@ -31,9 +31,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
-      <width>381</width>
-      <height>131</height>
+      <y>0</y>
+      <width>401</width>
+      <height>192</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -125,14 +125,17 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>150</y>
-      <width>381</width>
+      <y>200</y>
+      <width>401</width>
       <height>103</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
       <widget class="QLineEdit" name="lineEdit_addressRange">
+       <property name="text">
+        <string>192.168.177.250-192.168.178.20</string>
+       </property>
        <property name="placeholderText">
         <string>Specify address range[x.x.x.x-x.x.x.x]</string>
        </property>
@@ -154,6 +157,13 @@
            </property>
            <property name="shortcut">
             <string>Ctrl+S</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnAbort">
+           <property name="text">
+            <string>Abort</string>
            </property>
           </widget>
          </item>
@@ -224,9 +234,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>260</y>
-      <width>381</width>
-      <height>201</height>
+      <y>310</y>
+      <width>401</width>
+      <height>231</height>
      </rect>
     </property>
     <property name="verticalScrollBarPolicy">
@@ -236,7 +246,13 @@
      <enum>Qt::ScrollBarAlwaysOff</enum>
     </property>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>120</number>
+     <number>130</number>
+    </attribute>
+    <attribute name="horizontalHeaderMinimumSectionSize">
+     <number>10</number>
+    </attribute>
+    <attribute name="horizontalHeaderStretchLastSection">
+     <bool>true</bool>
     </attribute>
     <attribute name="verticalHeaderDefaultSectionSize">
      <number>30</number>
@@ -260,13 +276,33 @@
      </property>
     </column>
    </widget>
+   <widget class="QLabel" name="Background">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>-20</y>
+      <width>331</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>Background</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>tableWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>402</width>
+     <width>420</width>
      <height>21</height>
     </rect>
    </property>

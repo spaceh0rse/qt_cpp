@@ -3,12 +3,18 @@
 
 About::About(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::About)
+    ui_about(new Ui::About)
 {
-    ui->setupUi(this);
+    ui_about->setupUi(this);
+    //ui_about->pic_about->setVisible(true);
+    ui_about->pic_about->setPixmap(QApplication::applicationDirPath()+"/pic/about.png");
+    ui_about->pic_about->setAlignment(Qt::AlignCenter);
+    setWindowIcon(QIcon(QApplication::applicationDirPath()+"/pic/server.png"));
+
+    //ui_about->pic_about->show();
 }
 
 About::~About()
 {
-    delete ui;
+    delete ui_about;
 }

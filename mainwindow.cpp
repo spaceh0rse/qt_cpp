@@ -1,5 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "settings.h"
+#include "addressrange.h"
+#include "done.h"
+#include "about.h"
+#include "abort.h"
 #include <network_manager.h>
 #include <QStandardItemModel>
 #include <iostream>
@@ -8,14 +13,9 @@
 #include <QPrintDialog>
 #include <QPainter>
 
-#include "addressrange.h"
-
 /*
- * TODO:            OSspecifier
- *                  Abbrechen?
- *                  Settings
- *                  Languages
- *                  debug 256?
+ * Reset
+ * Abort
  */
 
 using namespace std;
@@ -32,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     NetworkManager netMan;
     QList<NetScanInterface> ownNet = netMan.getOwnNetwork();
 
+    //QIntValidator *ip_1 = new QIntValidator(1,255);
+    //ui->lineEdit_addressRange->setValidator(ip_1);
+
     //set labels with ownNetwork data
     ui->lbl_iface->setText(ownNet[0].iface);
     ui->lbl_ip->setText(ownNet[0].ip);
@@ -39,26 +42,35 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lbl_hostname->setText(ownNet[0].hostname);
     ui->lbl_mac->setText(ownNet[0].mac);
 
+    ui->Background->setPixmap(QApplication::applicationDirPath()+"/pic/server.png");
+    ui->Background->setAlignment(Qt::AlignCenter);
+    setWindowIcon(QIcon(QApplication::applicationDirPath()+"/pic/server.png"));
+
 }
 
 //run function !!NOT the one from QThread!! some kind of container
 void MainWindow::run() {
 
-    QString ownIP = ui->lbl_ip->text();
-    addressRange::ownIP=ownIP;
+    worker = new addressRange;
+
+    Settings set;
+    QStringList settings = set.getSetting();
+    QString delay = settings.last();
+
+    addressRange::ownIP=ui->lbl_ip->text();
     addressRange::user_in=ui->lineEdit_addressRange->text();
+    addressRange::responseDelay=delay.toInt();
 
-    int min_p = 0;
-    int max_p = 100;
+    ui->tableWidget->clearContents();
 
-    ui->progressBar->setMinimum(min_p);
-    ui->progressBar->setMaximum(max_p);
-
-    //new scanThread object == containing the overriden run-function from QThread
-    addressRange * worker = new addressRange;
+    ui->progressBar->setMinimum(1);
+    ui->progressBar->setMaximum(0);
+    ui->progressBar->setTextVisible(true);
+    ui->progressBar->setAlignment(Qt::AlignCenter);
+    ui->progressBar->setFormat("Scanning");
 
     //connect signals and corresponding slots
-    connect(worker, SIGNAL(resultReady(int)), SLOT(onResultReady(int)));   
+    connect(worker, SIGNAL(resultReady()), SLOT(onResultReady()));
     connect(worker, SIGNAL(entryTable(QString)),SLOT(onEntryTable(QString)));
     connect(worker, SIGNAL(ipNow(QString)),SLOT(ipFeedback(QString)));
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
@@ -81,6 +93,9 @@ void MainWindow::fillTable(QStringList addresses){
         QString ipAdress = QString::fromStdString(ip);
         QString macAdress = QString::fromStdString(mac);
 
+        ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        //ui->tableWidget->horizontalHeader()->setDefaultSectionSize(200);
+
         ui->tableWidget->setItem(counter,0,new QTableWidgetItem("X"));
         ui->tableWidget->setItem(counter,1,new QTableWidgetItem(ipAdress));
         ui->tableWidget->setItem(counter,2,new QTableWidgetItem(macAdress));
@@ -94,21 +109,16 @@ void MainWindow::fillTable(QStringList addresses){
         ui->tableWidget->item(counter,2)->setTextAlignment(Qt::AlignCenter);
         counter++;
     }
+    addresses.clear();
 }
 
 //slot-function to update the progressbar
-void MainWindow::onResultReady(int res) {
+void MainWindow::onResultReady() {
 
-    //QString ip5 = ui->lineEdit_ip5->text();
-    int done = '10';
-
-    //update the progressbar
-    ui->progressBar->setValue(res);
-    ui->progressBar->setTextVisible(true);
-    ui->progressBar->setAlignment(Qt::AlignCenter);
-    if(res==done){
-        ui->progressBar->setFormat("Scanning finished");
-    }
+    Done complet;
+    complet.exec();
+    ui->progressBar->setMaximum(1);
+    ui->progressBar->setTextVisible(false);
 }
 
 //slot-function to draw the tablewidget
@@ -120,6 +130,7 @@ void MainWindow::onEntryTable(QString entry){
     ui->tableWidget->insertRow(0);
     //fill tablewidget with entrys
     fillTable(listEntry);
+    listEntry.clear();
 }
 
 //application close function
@@ -135,7 +146,7 @@ void MainWindow::print(){
     if (printer_dialog.exec() == QDialog::Accepted) {
         QPainter painter(&printer);
         ui->tableWidget->render(&painter);
-    }
+    }    
 }
 
 //slot-function for user_feedback
@@ -146,17 +157,40 @@ void MainWindow::ipFeedback(QString ip){
 //slot-function for the menubar
 void MainWindow::on_actionSettings_triggered()
 {
-    formSettings =new QDialog;
-    formSettings->setModal(true);
-    Form_settings.setupUi(formSettings);
-    formSettings->show();
+    Settings option;
+    option.exec();
 }
 
 //slot-function for the menubar
 void MainWindow::on_actionAbout_triggered()
 {
-    formAbout =new QDialog;
-    formAbout->setModal(true);
-    Form_about.setupUi(formAbout);
-    formAbout->show();
+    About us;
+    us.exec();
+}
+
+//slot-function for the menubar
+void MainWindow::on_actionExit_triggered()
+{
+    MainWindow::close();
+}
+
+void MainWindow::on_btnAbort_clicked()
+{
+    if (worker != false && worker->isRunning()) {
+        worker->requestInterruption();
+        worker->wait();
+
+        ui->progressBar->setMaximum(1);
+        ui->progressBar->setTextVisible(false);
+        ui->label_feedback_output->setText("Scan canceled ...");
+
+        Abort stop;
+        stop.exec();
+
+    }else{
+
+    }
+
+
+
 }
