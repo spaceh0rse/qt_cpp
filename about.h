@@ -16,7 +16,7 @@ public:
     ~About();
 
 private:
-    Ui::About *ui;
+    Ui::About *ui_about;
 };
 
 #endif // ABOUT_H

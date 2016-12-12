@@ -6,6 +6,9 @@
 #include <QAbstractSocket>
 #include <QHostInfo>
 
+#include <iostream>
+
+using namespace std;
 
 string NetworkManager::ipv4;
 string NetworkManager::sub;
@@ -21,11 +24,15 @@ NetworkManager::NetworkManager()
 // returns a list of network data about the own network
 QList<NetScanInterface> NetworkManager::getOwnNetwork(){
 
+    OSSpecifier oss;
     //check wether to use the ethernet or wlan apdater
     network_interface = new QNetworkInterface();
     foreach (QNetworkInterface interface, network_interface->allInterfaces()) {
             if((interface.flags() & QNetworkInterface::IsUp) && (interface.flags() & QNetworkInterface::IsRunning)){
-                if(interface.humanReadableName().contains("LAN")||interface.humanReadableName().contains("WLAN")){
+
+                std::cout << interface.humanReadableName().toStdString() << std::endl;
+
+                if(interface.humanReadableName().contains(QString::fromStdString(oss.lan))||interface.humanReadableName().contains(QString::fromStdString(oss.wlan))){
 
                     // return QList<Interface> --> test
                     QList<NetScanInterface> list;
