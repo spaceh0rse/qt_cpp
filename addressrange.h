@@ -20,14 +20,14 @@ public:
     QStringList ipArray;
 
     static string delay;
-    static int counterSplit_cut,responseDelay;
+    static int counterSplit_cut,responseDelay,counter_devices;
     static QString user_in, ownIP;
     static QStringList array;
 
 signals:
     void resultReady();
     void entryTable(QString);
-    void ipNow(QString);
+    void ipNow(QString, int);
     void done();
 };
 

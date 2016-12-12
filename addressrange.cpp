@@ -9,7 +9,7 @@ using namespace std;
 
 QString addressRange::user_in=" ";
 QString addressRange::ownIP=" ";
-int addressRange::counterSplit_cut=0,addressRange::responseDelay;
+int addressRange::counterSplit_cut=0,addressRange::responseDelay,addressRange::counter_devices=0;
 QStringList addressRange::array;
 string addressRange::delay;
 
@@ -102,7 +102,7 @@ void addressRange::ping_address(QString address){
     QString eintragSuche,Rueckgabe_MAC, MAC = " ";
     int counter = 0;
 
-    emit ipNow(address);
+    emit ipNow(address,counter_devices);
 
     if(QString::compare(address, ownIP)==0){
 
@@ -146,7 +146,7 @@ void addressRange::ping_address(QString address){
                         MAC = entry;
                     }
                 }
-
+                counter_devices++;
                 eintragSuche.append(MAC+"|");
                 emit entryTable(eintragSuche);
              }

@@ -13,11 +13,6 @@
 #include <QPrintDialog>
 #include <QPainter>
 
-/*
- * Reset
- * Abort
- */
-
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -60,9 +55,10 @@ void MainWindow::run() {
     addressRange::ownIP=ui->lbl_ip->text();
     addressRange::user_in=ui->lineEdit_addressRange->text();
     addressRange::responseDelay=delay.toInt();
+    addressRange::counter_devices=0;
 
-    ui->tableWidget->clearContents();
-
+    ui->tableWidget->setRowCount(0);
+    ui->label_feedback_count->setText("0");
     ui->progressBar->setMinimum(1);
     ui->progressBar->setMaximum(0);
     ui->progressBar->setTextVisible(true);
@@ -72,7 +68,7 @@ void MainWindow::run() {
     //connect signals and corresponding slots
     connect(worker, SIGNAL(resultReady()), SLOT(onResultReady()));
     connect(worker, SIGNAL(entryTable(QString)),SLOT(onEntryTable(QString)));
-    connect(worker, SIGNAL(ipNow(QString)),SLOT(ipFeedback(QString)));
+    connect(worker, SIGNAL(ipNow(QString,int)),SLOT(ipFeedback(QString,int)));
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
     //starting computation in another thread
 
@@ -81,7 +77,7 @@ void MainWindow::run() {
 
 void MainWindow::fillTable(QStringList addresses){
 
-    int counter = 0;
+    int table_counter = 0;
 
     foreach(QString entry, addresses){
 
@@ -94,20 +90,19 @@ void MainWindow::fillTable(QStringList addresses){
         QString macAdress = QString::fromStdString(mac);
 
         ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-        //ui->tableWidget->horizontalHeader()->setDefaultSectionSize(200);
 
-        ui->tableWidget->setItem(counter,0,new QTableWidgetItem("X"));
-        ui->tableWidget->setItem(counter,1,new QTableWidgetItem(ipAdress));
-        ui->tableWidget->setItem(counter,2,new QTableWidgetItem(macAdress));
+        ui->tableWidget->setItem(table_counter,0,new QTableWidgetItem("X"));
+        ui->tableWidget->setItem(table_counter,1,new QTableWidgetItem(ipAdress));
+        ui->tableWidget->setItem(table_counter,2,new QTableWidgetItem(macAdress));
 
-        ui->tableWidget->item(counter,0)->setBackground(Qt::green);
-        ui->tableWidget->item(counter,1)->setBackground(Qt::green);
-        ui->tableWidget->item(counter,2)->setBackground(Qt::green);
+        ui->tableWidget->item(table_counter,0)->setBackground(Qt::green);
+        ui->tableWidget->item(table_counter,1)->setBackground(Qt::green);
+        ui->tableWidget->item(table_counter,2)->setBackground(Qt::green);
 
-        ui->tableWidget->item(counter,0)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(counter,1)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(counter,2)->setTextAlignment(Qt::AlignCenter);
-        counter++;
+        ui->tableWidget->item(table_counter,0)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(table_counter,1)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(table_counter,2)->setTextAlignment(Qt::AlignCenter);
+        table_counter++;
     }
     addresses.clear();
 }
@@ -119,6 +114,7 @@ void MainWindow::onResultReady() {
     complet.exec();
     ui->progressBar->setMaximum(1);
     ui->progressBar->setTextVisible(false);
+    ui->label_feedback_output->setText("Finished");
 }
 
 //slot-function to draw the tablewidget
@@ -150,8 +146,9 @@ void MainWindow::print(){
 }
 
 //slot-function for user_feedback
-void MainWindow::ipFeedback(QString ip){
+void MainWindow::ipFeedback(QString ip, int count){
     ui->label_feedback_output->setText(ip);
+    ui->label_feedback_count->setText(QString::number(count));
 }
 
 //slot-function for the menubar
@@ -183,6 +180,9 @@ void MainWindow::on_btnAbort_clicked()
         ui->progressBar->setMaximum(1);
         ui->progressBar->setTextVisible(false);
         ui->label_feedback_output->setText("Scan canceled ...");
+        ui->lineEdit_addressRange->setText(" ");
+        ui->tableWidget->setRowCount(addressRange::counter_devices);
+        ui->label_feedback_count->setText("0");
 
         Abort stop;
         stop.exec();
@@ -190,7 +190,4 @@ void MainWindow::on_btnAbort_clicked()
     }else{
 
     }
-
-
-
 }

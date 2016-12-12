@@ -27,14 +27,14 @@ private:
     QDialog *formSettings;
     QDialog *formAbout;
     QStringList listEntry;
-
+    static int table_counter;
     static int settingDelay;
 
 private slots:
     void run();
     void onResultReady();
     void onEntryTable(QString entry);
-    void ipFeedback(QString address);
+    void ipFeedback(QString address, int count);
     void print();
     void on_actionSettings_triggered();
     void on_actionAbout_triggered();
