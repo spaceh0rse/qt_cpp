@@ -8,6 +8,7 @@ Done::Done(QWidget *parent) :
     ui_done->setupUi(this);
     ui_done->pic_ok->setPixmap(QApplication::applicationDirPath()+"/pic/done.png");
     ui_done->pic_ok->setAlignment(Qt::AlignCenter);
+    setWindowIcon(QIcon(QApplication::applicationDirPath()+"/pic/server.png"));
 }
 
 Done::~Done()

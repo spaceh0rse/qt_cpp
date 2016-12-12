@@ -14,7 +14,7 @@ public:
     static string arp;
     static string lan;
     static string wlan;
-    static int MAC_1,MAC_2;
+    static int MAC;
 };
 
 #endif // OS_SPECIFIER_H

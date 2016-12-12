@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     addressrange.cpp \
     settings.cpp \
     about.cpp \
-    done.cpp
+    done.cpp \
+    abort.cpp
 
 HEADERS  += mainwindow.h \
     interface.h \
@@ -34,12 +35,14 @@ HEADERS  += mainwindow.h \
     addressrange.h \
     settings.h \
     about.h \
-    done.h
+    done.h \
+    abort.h
 
 FORMS    += mainwindow.ui \
     settings.ui \
     about.ui \
-    done.ui
+    done.ui \
+    abort.ui
 
 DISTFILES += \
     settings.ini

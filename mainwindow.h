@@ -36,11 +36,10 @@ private slots:
     void onEntryTable(QString entry);
     void ipFeedback(QString address);
     void print();
-    void onclearGUI();
     void on_actionSettings_triggered();
     void on_actionAbout_triggered();
     void on_actionExit_triggered();
-
+    void on_btnAbort_clicked();
 };
 
 #endif // MAINWINDOW_H

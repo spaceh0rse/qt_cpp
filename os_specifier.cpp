@@ -5,7 +5,7 @@
 using std::string;
 
 string OSSpecifier::wlan,OSSpecifier::lan,OSSpecifier::arp,OSSpecifier::macReturn,OSSpecifier::pingParameter;
-int OSSpecifier::MAC_1,OSSpecifier::MAC_2;
+int OSSpecifier::MAC;
 
 
 /*
@@ -27,8 +27,7 @@ OSSpecifier::OSSpecifier()
         arp = "arp -a ";
         lan = "LAN";
         wlan = "WLAN";
-        MAC_1 = 116;
-        MAC_2 = 17;
+        MAC = 10;
 
 
     #elif (defined (LINUX) || defined (__linux__))
@@ -39,11 +38,10 @@ OSSpecifier::OSSpecifier()
         // ping
         pingParameter = "-c";
         macReturn = "1 received";
-        arp = "arp";
+        arp = "arp ";
         lan = "eth";
         wlan = "WLAN";
-        MAC_1 = 29;
-        MAC_2 = 18;
+        MAC = 9;
 
     #endif
 }

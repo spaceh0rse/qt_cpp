@@ -4,6 +4,7 @@
 #include "addressrange.h"
 #include "done.h"
 #include "about.h"
+#include "abort.h"
 #include <network_manager.h>
 #include <QStandardItemModel>
 #include <iostream>
@@ -12,13 +13,9 @@
 #include <QPrintDialog>
 #include <QPainter>
 
-
-
-
 /*
  * Reset
  * Abort
- * String
  */
 
 using namespace std;
@@ -35,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     NetworkManager netMan;
     QList<NetScanInterface> ownNet = netMan.getOwnNetwork();
 
+    //QIntValidator *ip_1 = new QIntValidator(1,255);
+    //ui->lineEdit_addressRange->setValidator(ip_1);
+
     //set labels with ownNetwork data
     ui->lbl_iface->setText(ownNet[0].iface);
     ui->lbl_ip->setText(ownNet[0].ip);
@@ -42,10 +42,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lbl_hostname->setText(ownNet[0].hostname);
     ui->lbl_mac->setText(ownNet[0].mac);
 
+    ui->Background->setPixmap(QApplication::applicationDirPath()+"/pic/server.png");
+    ui->Background->setAlignment(Qt::AlignCenter);
+    setWindowIcon(QIcon(QApplication::applicationDirPath()+"/pic/server.png"));
+
 }
 
 //run function !!NOT the one from QThread!! some kind of container
 void MainWindow::run() {
+
+    worker = new addressRange;
 
     Settings set;
     QStringList settings = set.getSetting();
@@ -55,8 +61,6 @@ void MainWindow::run() {
     addressRange::user_in=ui->lineEdit_addressRange->text();
     addressRange::responseDelay=delay.toInt();
 
-    cout << ui->lineEdit_addressRange->text().toStdString() << endl;
-
     ui->tableWidget->clearContents();
 
     ui->progressBar->setMinimum(1);
@@ -64,9 +68,6 @@ void MainWindow::run() {
     ui->progressBar->setTextVisible(true);
     ui->progressBar->setAlignment(Qt::AlignCenter);
     ui->progressBar->setFormat("Scanning");
-
-    //new scanThread object == containing the overriden run-function from QThread
-
 
     //connect signals and corresponding slots
     connect(worker, SIGNAL(resultReady()), SLOT(onResultReady()));
@@ -115,7 +116,6 @@ void MainWindow::fillTable(QStringList addresses){
 void MainWindow::onResultReady() {
 
     Done complet;
-    //connect(Done::complet, SIGNAL(clearGUI()), SLOT(onclearGUI()));
     complet.exec();
     ui->progressBar->setMaximum(1);
     ui->progressBar->setTextVisible(false);
@@ -141,28 +141,12 @@ MainWindow::~MainWindow(){
 //slot-function to abort the process
 void MainWindow::print(){
 
-    cout << "lol" << endl;
-
-    if (worker != false && worker->isRunning()) {
-        worker->requestInterruption();
-        worker->wait();
-    }
-
-
-    /*
-    if (worker != false && worker->isRunning()) {
-        worker->requestInterruption();
-        worker->wait();
-    }
-
-
     QPrinter printer;
     QPrintDialog printer_dialog(&printer);
     if (printer_dialog.exec() == QDialog::Accepted) {
         QPainter painter(&printer);
         ui->tableWidget->render(&painter);
-    }
-    */
+    }    
 }
 
 //slot-function for user_feedback
@@ -190,7 +174,23 @@ void MainWindow::on_actionExit_triggered()
     MainWindow::close();
 }
 
-void MainWindow::onclearGUI()
+void MainWindow::on_btnAbort_clicked()
 {
-    cout << "TEST" << endl;
+    if (worker != false && worker->isRunning()) {
+        worker->requestInterruption();
+        worker->wait();
+
+        ui->progressBar->setMaximum(1);
+        ui->progressBar->setTextVisible(false);
+        ui->label_feedback_output->setText("Scan canceled ...");
+
+        Abort stop;
+        stop.exec();
+
+    }else{
+
+    }
+
+
+
 }

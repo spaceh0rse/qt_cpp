@@ -9,7 +9,7 @@ About::About(QWidget *parent) :
     //ui_about->pic_about->setVisible(true);
     ui_about->pic_about->setPixmap(QApplication::applicationDirPath()+"/pic/about.png");
     ui_about->pic_about->setAlignment(Qt::AlignCenter);
-    setWindowIcon(QIcon(QApplication::applicationDirPath()+"/pic/about.png"));
+    setWindowIcon(QIcon(QApplication::applicationDirPath()+"/pic/server.png"));
 
     //ui_about->pic_about->show();
 }

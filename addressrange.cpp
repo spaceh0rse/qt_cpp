@@ -17,6 +17,8 @@ void addressRange::run(){
 
     string address;
 
+    array.clear();
+
     split_cut(user_in.toStdString());
 
     int ip1 =array[0].toInt(); int ziel1 = array[4].toInt();
@@ -52,8 +54,6 @@ void addressRange::run(){
 
 void addressRange::split_cut(string user_in){
 
-    //user_input kommt immer an...keine Ahnung warum der reset nich funzt!
-
     if(counterSplit_cut<3){
 
         string cut_left = user_in.substr(0,user_in.find_first_of('.'));
@@ -81,7 +81,7 @@ void addressRange::split_cut(string user_in){
         if(counterSplit_cut==7){
 
             array.append(QString::fromStdString(user_in));
-
+            counterSplit_cut=0;
             return;
         }
 
@@ -99,8 +99,8 @@ void addressRange::split_cut(string user_in){
 void addressRange::ping_address(QString address){
 
     OSSpecifier oss;
-    QString eintragSuche,Rueckgabe_MAC,MAC_qstring;
-    string MAC_temp,MAC_final;
+    QString eintragSuche,Rueckgabe_MAC, MAC = " ";
+    int counter = 0;
 
     emit ipNow(address);
 
@@ -127,12 +127,10 @@ void addressRange::ping_address(QString address){
 
         eintragSuche = " ";
 
-        //std::cout << Rueckgabe.toStdString() << std::endl;
-
             if(Rueckgabe.contains(QString::fromStdString(oss.macReturn))){
 
                 //gettin MAC
-                QString befehl_mac = QString::fromStdString(oss.arp)+address; //Funzt nur unter Windows
+                QString befehl_mac = QString::fromStdString(oss.arp)+address;
                 QProcess MAC_beziehn;
                 MAC_beziehn.start(befehl_mac);
                 MAC_beziehn.waitForFinished(responseDelay);
@@ -140,14 +138,16 @@ void addressRange::ping_address(QString address){
                 eintragSuche.append(address+"|");
 
                 Rueckgabe_MAC = MAC_beziehn.readAllStandardOutput();
-                MAC_temp = Rueckgabe_MAC.toStdString();
-                MAC_final = MAC_temp.substr(oss.MAC_1,oss.MAC_2);
-                MAC_qstring = QString::fromStdString(MAC_final);
+                QStringList reTurn_MAC = Rueckgabe_MAC.split(QRegExp("\\s+"),QString::SkipEmptyParts);
 
-                //std::cout << MAC_temp << Rueckgabe_MAC.count(QLatin1Char(' ')) << std::endl;
+                foreach (QString entry, reTurn_MAC){
+                    counter++;
+                    if(counter==oss.MAC){
+                        MAC = entry;
+                    }
+                }
 
-                eintragSuche.append(MAC_qstring+"|");
-
+                eintragSuche.append(MAC+"|");
                 emit entryTable(eintragSuche);
              }
         }

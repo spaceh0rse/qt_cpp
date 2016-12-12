@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>719</width>
-    <height>514</height>
+    <width>420</width>
+    <height>586</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icon/server_b.png</normaloff>icon/server_b.png</iconset>
+    <normaloff>pic/server.png</normaloff>pic/server.png</iconset>
   </property>
   <property name="documentMode">
    <bool>false</bool>
@@ -31,9 +31,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
+      <y>0</y>
       <width>401</width>
-      <height>131</height>
+      <height>192</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -125,7 +125,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>150</y>
+      <y>200</y>
       <width>401</width>
       <height>103</height>
      </rect>
@@ -157,6 +157,13 @@
            </property>
            <property name="shortcut">
             <string>Ctrl+S</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnAbort">
+           <property name="text">
+            <string>Abort</string>
            </property>
           </widget>
          </item>
@@ -227,9 +234,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>260</y>
+      <y>310</y>
       <width>401</width>
-      <height>201</height>
+      <height>231</height>
      </rect>
     </property>
     <property name="verticalScrollBarPolicy">
@@ -269,26 +276,33 @@
      </property>
     </column>
    </widget>
-   <widget class="QLabel" name="label_6">
+   <widget class="QLabel" name="Background">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>90</y>
-      <width>231</width>
-      <height>211</height>
+      <x>210</x>
+      <y>-20</y>
+      <width>331</width>
+      <height>201</height>
      </rect>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
     </property>
    </widget>
+   <zorder>Background</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>tableWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>719</width>
+     <width>420</width>
      <height>21</height>
     </rect>
    </property>

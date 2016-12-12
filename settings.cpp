@@ -18,6 +18,7 @@ Settings::Settings(QWidget *parent) :
     ui_settings->setupUi(this);
     ui_settings->pic_settings->setPixmap(QApplication::applicationDirPath()+"/pic/settings.png");
     ui_settings->pic_settings->setAlignment(Qt::AlignCenter);
+    setWindowIcon(QIcon(QApplication::applicationDirPath()+"/pic/server.png"));
     sysDir = QApplication::applicationDirPath();
 
     getSetting();
