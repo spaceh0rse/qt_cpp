@@ -39,8 +39,8 @@ OSSpecifier::OSSpecifier()
         pingParameter = "-c";
         macReturn = "1 received";
         arp = "arp ";
-        lan = "eth";
-        wlan = "WLAN";
+        lan = "enp2s0";
+        wlan = "wlp3s0";
         MAC = 9;
 
     #endif

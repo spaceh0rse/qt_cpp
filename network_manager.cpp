@@ -30,7 +30,7 @@ QList<NetScanInterface> NetworkManager::getOwnNetwork(){
     foreach (QNetworkInterface interface, network_interface->allInterfaces()) {
             if((interface.flags() & QNetworkInterface::IsUp) && (interface.flags() & QNetworkInterface::IsRunning)){
 
-                std::cout << interface.humanReadableName().toStdString() << std::endl;
+                //std::cout << interface.humanReadableName().toStdString() << std::endl;
 
                 if(interface.humanReadableName().contains(QString::fromStdString(oss.lan))||interface.humanReadableName().contains(QString::fromStdString(oss.wlan))){
 

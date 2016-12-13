@@ -14,9 +14,10 @@ class NetworkManager
 public:
     NetworkManager();
 
-    QList<QString> ownNetwork;
     QList<NetScanInterface> getOwnNetwork();
-    QNetworkInterface *network_interface;
+
+    QList<QString> ownNetwork;    
+    QNetworkInterface * network_interface;
 
     static string ipv4;
     static string sub;

@@ -177,7 +177,10 @@
          <item>
           <widget class="QPushButton" name="btnAbort">
            <property name="text">
-            <string>Abort</string>
+            <string>&amp;Abort</string>
+           </property>
+           <property name="shortcut">
+            <string>Ctrl+A</string>
            </property>
           </widget>
          </item>
