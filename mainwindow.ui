@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>420</width>
-    <height>586</height>
+    <height>545</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,12 +33,19 @@
       <x>10</x>
       <y>0</y>
       <width>401</width>
-      <height>192</height>
+      <height>141</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="Line" name="line_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
@@ -117,6 +124,13 @@
          </item>
         </layout>
        </item>
+       <item>
+        <widget class="Line" name="line_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>
@@ -125,7 +139,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>200</y>
+      <y>150</y>
       <width>401</width>
       <height>103</height>
      </rect>
@@ -134,7 +148,7 @@
      <item>
       <widget class="QLineEdit" name="lineEdit_addressRange">
        <property name="text">
-        <string>192.168.177.250-192.168.178.20</string>
+        <string/>
        </property>
        <property name="placeholderText">
         <string>Specify address range[x.x.x.x-x.x.x.x]</string>
@@ -163,7 +177,10 @@
          <item>
           <widget class="QPushButton" name="btnAbort">
            <property name="text">
-            <string>Abort</string>
+            <string>&amp;Abort</string>
+           </property>
+           <property name="shortcut">
+            <string>Ctrl+A</string>
            </property>
           </widget>
          </item>
@@ -205,6 +222,13 @@
           <number>6</number>
          </property>
          <item>
+          <widget class="Line" name="line_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QLabel" name="label_feedback">
            <property name="baseSize">
             <size>
@@ -219,8 +243,54 @@
          </item>
          <item>
           <widget class="QLabel" name="label_feedback_output">
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color:rgb(199, 199, 199);</string>
+           </property>
            <property name="text">
             <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Responding devices:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_feedback_count">
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color:rgb(199, 199, 199);</string>
+           </property>
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
@@ -234,7 +304,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>310</y>
+      <y>260</y>
       <width>401</width>
       <height>231</height>
      </rect>
@@ -282,8 +352,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>-20</y>
+      <x>200</x>
+      <y>-40</y>
       <width>331</width>
       <height>201</height>
      </rect>

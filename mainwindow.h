@@ -6,6 +6,7 @@
 #include "ui_about.h"
 
 #include "addressrange.h"
+#include "ipv6.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,21 +21,22 @@ public:
     void fillTable(QStringList addresses);
     ~MainWindow();
 
-    addressRange * worker = new addressRange;
+    addressRange * worker_ipv4 = new addressRange;
+    IPv6 * worker_ipv6 = new IPv6;
 
 private:
     Ui::MainWindow *ui;
-    QDialog *formSettings;
-    QDialog *formAbout;
+    QDialog * formSettings;
+    QDialog * formAbout;
     QStringList listEntry;
-
+    static int table_counter;
     static int settingDelay;
 
 private slots:
     void run();
     void onResultReady();
     void onEntryTable(QString entry);
-    void ipFeedback(QString address);
+    void ipFeedback(QString address, int count);
     void print();
     void on_actionSettings_triggered();
     void on_actionAbout_triggered();
