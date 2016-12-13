@@ -1,16 +1,16 @@
-#ifndef ADDRESSRANGE_H
-#define ADDRESSRANGE_H
+#ifndef IPV6_H
+#define IPV6_H
 
 #include <QThread>
 #include <QString>
 
 using namespace std;
 
-class addressRange : public QThread
+class IPv6 : public QThread
 {
     Q_OBJECT
 public:
-    explicit addressRange(QObject *parent = 0) : QThread(parent) {
+    explicit IPv6(QObject *parent = 0) : QThread(parent) {
 
     }
     void run();
@@ -31,4 +31,4 @@ signals:
     void done();
 };
 
-#endif // ADDRESSRANGE_H
+#endif // IPV6_H

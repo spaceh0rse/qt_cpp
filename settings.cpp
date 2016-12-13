@@ -2,7 +2,7 @@
 #include "ui_settings.h"
 #include <iostream>
 #include <QSettings>
-#include <qDebug>
+//#include <qDebug>
 #include <QApplication>
 
 #include "addressrange.h"

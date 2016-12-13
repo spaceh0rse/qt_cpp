@@ -1,4 +1,4 @@
-#include "addressrange.h"
+#include "ipv6.h"
 #include "interface.h"
 #include "os_specifier.h"
 #include <iostream>
@@ -7,14 +7,19 @@
 
 using namespace std;
 
-QString addressRange::user_in=" ";
-QString addressRange::ownIP=" ";
-int addressRange::counterSplit_cut=0,addressRange::responseDelay,addressRange::counter_devices=0;
-QStringList addressRange::array;
-string addressRange::delay;
+/*
+ *ONLY ipv4 support right now, implemention is next big feature
+ *
+ */
 
-void addressRange::run(){
+QString IPv6::user_in=" ";
+QString IPv6::ownIP=" ";
+int IPv6::counterSplit_cut=0,IPv6::responseDelay,IPv6::counter_devices=0;
+QStringList IPv6::array;
+string IPv6::delay;
 
+void IPv6::run()
+{
     string address;
 
     array.clear();
@@ -52,7 +57,7 @@ void addressRange::run(){
     }
 }
 
-void addressRange::split_cut(string user_in){
+void IPv6::split_cut(string user_in){
 
     if(counterSplit_cut<3){
 
@@ -96,7 +101,7 @@ void addressRange::split_cut(string user_in){
     }
 }
 
-void addressRange::ping_address(QString address){
+void IPv6::ping_address(QString address){
 
     OSSpecifier oss;
     QString eintragSuche,Rueckgabe_MAC, MAC = " ";
@@ -109,8 +114,7 @@ void addressRange::ping_address(QString address){
         cout << "LOOPBACK" << endl;
 
      }else{
-
-        //bulid process
+        //build process
         QString befehl = "ping";
         QStringList parameter;
         parameter << QString::fromStdString(oss.pingParameter) << "1" << address;

@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     settings.cpp \
     about.cpp \
     done.cpp \
-    abort.cpp
+    abort.cpp \
+    ipv6.cpp
 
 HEADERS  += mainwindow.h \
     interface.h \
@@ -36,7 +37,8 @@ HEADERS  += mainwindow.h \
     settings.h \
     about.h \
     done.h \
-    abort.h
+    abort.h \
+    ipv6.h
 
 FORMS    += mainwindow.ui \
     settings.ui \

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "settings.h"
 #include "addressrange.h"
+#include "ipv6.h"
 #include "done.h"
 #include "about.h"
 #include "abort.h"
@@ -12,11 +13,8 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QPainter>
-
-/*
- * Reset
- * Abort
- */
+#include <QIntValidator>
+#include <QRegExp>
 
 using namespace std;
 
@@ -32,8 +30,9 @@ MainWindow::MainWindow(QWidget *parent) :
     NetworkManager netMan;
     QList<NetScanInterface> ownNet = netMan.getOwnNetwork();
 
-    //QIntValidator *ip_1 = new QIntValidator(1,255);
-    //ui->lineEdit_addressRange->setValidator(ip_1);
+    QRegExp format("(|-|\\.|[0-9]){31}");
+    QRegExpValidator *ip_Exp = new QRegExpValidator(format, this);
+    ui->lineEdit_addressRange->setValidator(ip_Exp);
 
     //set labels with ownNetwork data
     ui->lbl_iface->setText(ownNet[0].iface);
@@ -51,7 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //run function !!NOT the one from QThread!! some kind of container
 void MainWindow::run() {
 
-    worker = new addressRange;
+    worker_ipv4 = new addressRange;
+    worker_ipv6 = new IPv6;
 
     Settings set;
     QStringList settings = set.getSetting();
@@ -60,9 +60,10 @@ void MainWindow::run() {
     addressRange::ownIP=ui->lbl_ip->text();
     addressRange::user_in=ui->lineEdit_addressRange->text();
     addressRange::responseDelay=delay.toInt();
+    addressRange::counter_devices=0;
 
-    ui->tableWidget->clearContents();
-
+    ui->tableWidget->setRowCount(0);
+    ui->label_feedback_count->setText("0");
     ui->progressBar->setMinimum(1);
     ui->progressBar->setMaximum(0);
     ui->progressBar->setTextVisible(true);
@@ -70,18 +71,18 @@ void MainWindow::run() {
     ui->progressBar->setFormat("Scanning");
 
     //connect signals and corresponding slots
-    connect(worker, SIGNAL(resultReady()), SLOT(onResultReady()));
-    connect(worker, SIGNAL(entryTable(QString)),SLOT(onEntryTable(QString)));
-    connect(worker, SIGNAL(ipNow(QString)),SLOT(ipFeedback(QString)));
-    connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    connect(worker_ipv4, SIGNAL(resultReady()), SLOT(onResultReady()));
+    connect(worker_ipv4, SIGNAL(entryTable(QString)),SLOT(onEntryTable(QString)));
+    connect(worker_ipv4, SIGNAL(ipNow(QString,int)),SLOT(ipFeedback(QString,int)));
+    connect(worker_ipv4, SIGNAL(finished()), worker_ipv4, SLOT(deleteLater()));
     //starting computation in another thread
 
-    worker->start();
+    worker_ipv4->start();
 }
 
 void MainWindow::fillTable(QStringList addresses){
 
-    int counter = 0;
+    int table_counter = 0;
 
     foreach(QString entry, addresses){
 
@@ -94,20 +95,19 @@ void MainWindow::fillTable(QStringList addresses){
         QString macAdress = QString::fromStdString(mac);
 
         ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-        //ui->tableWidget->horizontalHeader()->setDefaultSectionSize(200);
 
-        ui->tableWidget->setItem(counter,0,new QTableWidgetItem("X"));
-        ui->tableWidget->setItem(counter,1,new QTableWidgetItem(ipAdress));
-        ui->tableWidget->setItem(counter,2,new QTableWidgetItem(macAdress));
+        ui->tableWidget->setItem(table_counter,0,new QTableWidgetItem("X"));
+        ui->tableWidget->setItem(table_counter,1,new QTableWidgetItem(ipAdress));
+        ui->tableWidget->setItem(table_counter,2,new QTableWidgetItem(macAdress));
 
-        ui->tableWidget->item(counter,0)->setBackground(Qt::green);
-        ui->tableWidget->item(counter,1)->setBackground(Qt::green);
-        ui->tableWidget->item(counter,2)->setBackground(Qt::green);
+        ui->tableWidget->item(table_counter,0)->setBackground(Qt::green);
+        ui->tableWidget->item(table_counter,1)->setBackground(Qt::green);
+        ui->tableWidget->item(table_counter,2)->setBackground(Qt::green);
 
-        ui->tableWidget->item(counter,0)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(counter,1)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(counter,2)->setTextAlignment(Qt::AlignCenter);
-        counter++;
+        ui->tableWidget->item(table_counter,0)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(table_counter,1)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(table_counter,2)->setTextAlignment(Qt::AlignCenter);
+        table_counter++;
     }
     addresses.clear();
 }
@@ -119,6 +119,7 @@ void MainWindow::onResultReady() {
     complet.exec();
     ui->progressBar->setMaximum(1);
     ui->progressBar->setTextVisible(false);
+    ui->label_feedback_output->setText("Finished");
 }
 
 //slot-function to draw the tablewidget
@@ -150,8 +151,9 @@ void MainWindow::print(){
 }
 
 //slot-function for user_feedback
-void MainWindow::ipFeedback(QString ip){
+void MainWindow::ipFeedback(QString ip, int count){
     ui->label_feedback_output->setText(ip);
+    ui->label_feedback_count->setText(QString::number(count));
 }
 
 //slot-function for the menubar
@@ -176,13 +178,16 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_btnAbort_clicked()
 {
-    if (worker != false && worker->isRunning()) {
-        worker->requestInterruption();
-        worker->wait();
+    if (worker_ipv4 != false && worker_ipv4->isRunning()) {
+        worker_ipv4->requestInterruption();
+        worker_ipv4->wait();
 
         ui->progressBar->setMaximum(1);
         ui->progressBar->setTextVisible(false);
         ui->label_feedback_output->setText("Scan canceled ...");
+        ui->lineEdit_addressRange->setText(" ");
+        ui->tableWidget->setRowCount(addressRange::counter_devices);
+        ui->label_feedback_count->setText("0");
 
         Abort stop;
         stop.exec();
@@ -190,7 +195,4 @@ void MainWindow::on_btnAbort_clicked()
     }else{
 
     }
-
-
-
 }
